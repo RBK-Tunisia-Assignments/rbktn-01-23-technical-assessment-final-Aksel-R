@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import "../App.css";
 import axios from "axios";
-const Add = ({changeChecker}) => {
+const UpdateRes = ({id,data,changeChecker}) => {
 
 const [name,setName]=useState("")
 const [Cook,setCook]=useState(0)
@@ -13,9 +13,13 @@ const [Ingredients,setIngredients]=useState("")
 const [categorie,setcategorie]=useState("")
 
 
-
+var filtredData=data.filter((e)=>{
+    console.log(data)
+    return e.recepie_Id===id})
+    console.log(filtredData)
 
 var recepie={
+   
     recepie_Name:name ,
     Cook_Time:Cook ,
     Prep_Time: Prep,
@@ -29,16 +33,19 @@ var recepie={
 }
 
 
-const add=(event)=>{
+const update=(event)=>{
   console.log('adding')
 event.preventDefault()
-  axios.post("http://localhost:4000/api/recepies",recepie)
+  axios.patch(`http://localhost:4000/api/recepies/${id}`,recepie)
   .then((res)=>console.log(res))
   .catch((err)=>console.log(err))
   changeChecker(Math.floor(Math.random() *100))
+
 }
 
   return (
+   <>
+<h2>update {filtredData[0].recepie_Name}</h2>
     <div className="add-recipe-form ">
       <div className="form-group">
         <label>Name:</label>
@@ -73,8 +80,9 @@ event.preventDefault()
         <label>Image:</label>
         <input onChange={(event)=>setimg(event.target.value)} type="text" placeholder="Image URL" />
       </div>
-      <button onClick={(event) => add(event)}>Create Recipe</button>
+      <button onClick={(event) => update(event)}>Update Recipe</button>
     </div>
+    </>
   );
 };
-export default Add;
+export default UpdateRes;
